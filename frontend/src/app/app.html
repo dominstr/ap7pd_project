@@ -1,10 +1,32 @@
-<nav style="background: #222; color: white; padding: 1rem; margin-bottom: 20px;">
-  <div style="max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between;">
-    <strong>Development boards</strong>
-    <a routerLink="/" style="color: #4db8ff; text-decoration: none;">Back to list</a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow mb-4">
+  <div class="container">
+    <a class="navbar-brand fw-bold" routerLink="/">
+      <i class="bi bi-cpu-fill me-2 text-primary"></i>DevBoard Manager
+    </a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" 
+           routerLink="/" 
+           routerLinkActive="active" 
+           [routerLinkActiveOptions]="{exact: true}">
+           <i class="bi bi-circuit-board me-1"></i> Boards
+        </a>
+        
+        <a class="nav-link" 
+           routerLink="/mcu"
+           routerLinkActive="active">
+           Microcontrollers
+        </a>
+      </div>
+    </div>
   </div>
 </nav>
 
-<main style="max-width: 1000px; margin: 0 auto; padding: 0 20px;">
+<div class="container">
   <router-outlet></router-outlet>
-</main>
+</div>

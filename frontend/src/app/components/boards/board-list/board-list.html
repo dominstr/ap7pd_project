@@ -1,0 +1,42 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+    <h2 class="fw-bold"><i class="bi bi-motherboard me-2"></i>Development Boards</h2>
+    <button [routerLink]="['/boards/details', 0]" class="btn btn-success">
+      <i class="bi bi-plus-lg"></i> Add New Board
+    </button>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <table class="table table-hover mb-0 align-middle">
+      <thead class="table-light text-secondary text-uppercase small">
+        <tr>
+          <th class="ps-3">ID</th>
+          <th>Board name</th>
+          <th>Manufacturer</th>
+          <th>Flash [kB]</th>
+          <th>MCU ID</th>
+          <th class="text-center pe-3">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of boards">
+          <td class="fw-bold ps-3">{{ b.id }}</td>
+          <td>{{ b.name }}</td>
+          <td>{{ b.manufacturer }}</td>
+          <td>{{ b.flashKb }}</td>
+          <td>{{ b.microcontrollerId }}</td>
+          <td class="text-center pe-3">
+            <button [routerLink]="['/boards/details', b.id]" class="btn btn-primary btn-sm">
+              Edit
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="boards.length === 0" class="text-center p-5 text-muted border-top">
+      <div class="spinner-border text-primary mb-2" role="status"></div>
+      <p class="mb-0">Loading data from database...</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-cpu-fill me-2"></i>
+                        {{ id === 0 ? 'Add New Microcontroller' : 'Edit Microcontroller' }}
+                    </h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <form #mcuForm="ngForm">
+                        <div class="mb-3" *ngIf="id !== 0">
+                            <label class="form-label text-muted small fw-bold">ID</label>
+                            <input type="text" class="form-control bg-light" [value]="id" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-bold">Name</label>
+                            <input type="text" id="name" name="name" class="form-control" [(ngModel)]="mcu.name"
+                                required placeholder="e.g. ESP32-S3 or ATMega328P">
+                        </div>
+
+                        <div class="mb-3">
+                        <label for="manufacturer" class="form-label fw-bold">Manufacturer</label>
+                        <input type="text" id="manufacturer" name="manufacturer" class="form-control" 
+                                [(ngModel)]="mcu.manufacturer" placeholder="e.g. Espressif" required>
+                        </div>
+
+                        <div class="mb-3">
+                        <label for="architecture" class="form-label fw-bold">Architecture</label>
+                        <input type="text" id="architecture" name="architecture" class="form-control" 
+                                [(ngModel)]="mcu.architecture" placeholder="e.g. Xtensa" required>
+                        </div>
+
+                        <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="cores" class="form-label fw-bold">Cores</label>
+                            <input type="number" id="cores" name="cores" class="form-control" 
+                                [(ngModel)]="mcu.cores" min="1" (input)="validatePositives('cores')">
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="clockSpeed" class="form-label fw-bold">Clock Speed (MHz)</label>
+                            <input type="number" id="clockSpeed" name="clockSpeed" class="form-control" 
+                                [(ngModel)]="mcu.clockSpeedMhz" min="0" (input)="validatePositives('clockSpeedMhz')">
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label for="ram" class="form-label fw-bold">RAM (KB)</label>
+                            <input type="number" id="ram" name="ram" class="form-control" 
+                                [(ngModel)]="mcu.ramKb" min="0" (input)="validatePositives('ramKb')">
+                        </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button type="button" class="btn btn-outline-secondary" [routerLink]="['/mcu']">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </button>
+
+                            <button type="button" class="btn btn-primary px-4 shadow-sm" (click)="save()"
+                                [disabled]="!mcuForm.form.valid">
+                                <i class="bi bi-check-lg me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

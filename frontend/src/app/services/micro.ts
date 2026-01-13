@@ -20,11 +20,6 @@ export class MicroService {
     return this.http.get<any>(`${this.apiUrl}/boards/${id}`);
   }
 
-  // Single Microcontroller detail by ID
-  getMicrocontrollerById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/microcontrollers/${id}`);
-  }
-
   // Add new Board
   addBoard(board: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/boards`, board);
@@ -38,5 +33,30 @@ export class MicroService {
   // Delete Board
   deleteBoard(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/boards/${id}`);
+  }
+
+  // Get all MCU
+  getMicrocontrollers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/mcu`);
+  }
+
+  // Single MCU detail by ID
+  getMicrocontrollerById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/mcu/${id}`);
+  }
+
+  // Add new MCU
+  addMicrocontroller(mcu: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/mcu`, mcu);
+  }
+
+  // Edit MCU
+  updateMicrocontroller(id: number, mcu: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/mcu/${id}`, mcu);
+  }
+
+  // Delete MCU
+  deleteMicrocontroller(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/mcu/${id}`);
   }
 }

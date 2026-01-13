@@ -1,36 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { MicroService } from '../../services/micro';
+import { MicroService } from '../../../services/micro';
 
 @Component({
   selector: 'app-details',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './details.html'
+  templateUrl: './board-details.html'
 })
-export class Details implements OnInit {
-   board: any = {id: 0, name: "", manufacturer: "", mcuId: 1, flashKb: 0, ramKb: 0};
+export class BoardDetails implements OnInit {
+   board: any = null;
    mcu: any = null; // Micro Controller Unit
    isNew = true;
 
    constructor(
     private route:  ActivatedRoute,
     private router: Router,
-    private service: MicroService
+    private service: MicroService,
+    private cdr: ChangeDetectorRef
    ) {}
 
    ngOnInit(): void {
-     const id = Number(this.route.snapshot.paramMap.get("id"));
-     if (id !== 0) {
+    const idParam = this.route.snapshot.paramMap.get("id");
+    const id = idParam ? Number(idParam) : 0;
+
+if (id !== 0) {
       this.isNew = false;
-      this.service.getBoardById(id).subscribe(data => {
-        this.board = data;
-        this.loadMcuDetails(data.mcuId);
+      this.service.getBoardById(id).subscribe({
+        next: (data) => {
+          this.board = data;
+          if (data.microcontrollerId) {
+            this.loadMcuDetails(data.microcontrollerId);
+          }
+          this.cdr.detectChanges();
+        },
+        error: (err) => console.error("Error loading board", err)
       });
-     }
-   }
+    } else {
+      this.isNew = true;
+      // Default values for new board
+      this.board = { id: 0, name: '', manufacturer: '', flashKb: 0, microcontrollerId: 0 };
+    }
+  }
 
    loadMcuDetails(mcuId: number): void {
     this.service.getMicrocontrollerById(mcuId).subscribe(data => this.mcu = data);

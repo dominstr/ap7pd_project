@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MicroApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4789915fd4dcdfc3a549f5253db1e265d579b916")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64ca05f59da91e8a96793d788cdc366043836677")]
 [assembly: System.Reflection.AssemblyProductAttribute("MicroApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MicroApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

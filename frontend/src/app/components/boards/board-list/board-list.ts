@@ -1,15 +1,15 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MicroService } from '../../services/micro';
+import { MicroService } from '../../../services/micro';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './home.html'
+  templateUrl: './board-list.html'
 })
-export class Home implements OnInit {
+export class BoardList implements OnInit {
   boards: any[] = [];
 
   constructor(private microService: MicroService,

@@ -20,14 +20,11 @@ var mcsCol = database.GetCollection<Microcontroller>("Microcontrollers");
 var app = builder.Build();
 app.UseCors();
 
-// API ENDPOINTS
+// BOARDS API ENDPOINTS
 app.MapGet("/api/boards", async () => await boardsCol.Find(_ => true).ToListAsync());
 
 app.MapGet("/api/boards/{id:int}", async (int id) => 
     await boardsCol.Find(x => x.Id == id).FirstOrDefaultAsync());
-
-app.MapGet("/api/microcontrollers/{id:int}", async (int id) => 
-    await mcsCol.Find(x => x.Id == id).FirstOrDefaultAsync());
 
 app.MapGet("/api/boards/search", async (string q) => 
     await boardsCol.Find(x => x.Name.ToLower().Contains(q.ToLower())).ToListAsync());
@@ -44,6 +41,28 @@ app.MapPut("/api/boards/{id:int}", async (int id, Board b) => {
 
 app.MapDelete("/api/boards/{id:int}", async (int id) => {
     await boardsCol.DeleteOneAsync(x => x.Id == id);
+    return Results.NoContent();
+});
+
+// MICROCONTROLLERS API ENDPOINTS
+app.MapGet("/api/mcu", async () => 
+    await mcsCol.Find(_ => true).ToListAsync());
+
+app.MapGet("/api/mcu/{id:int}", async (int id) => 
+    await mcsCol.Find(x => x.Id == id).FirstOrDefaultAsync());
+
+app.MapPost("/api/mcu", async (Microcontroller m) => {
+    await mcsCol.InsertOneAsync(m);
+    return Results.Created($"/api/mcu/{m.Id}", m);
+});
+
+app.MapPut("/api/mcu/{id:int}", async (int id, Microcontroller m) => {
+    await mcsCol.ReplaceOneAsync(x => x.Id == id, m);
+    return Results.NoContent();
+});
+
+app.MapDelete("/api/mcu/{id:int}", async (int id) => {
+    await mcsCol.DeleteOneAsync(x => x.Id == id);
     return Results.NoContent();
 });
 
