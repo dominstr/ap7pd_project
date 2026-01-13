@@ -1,0 +1,37 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "START ALL",
+      "dependsOn": ["Run MongoDB", "Run Backend", "Run Frontend", "Make Ports Public"],
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "Run MongoDB",
+      "type": "shell",
+      "command": "docker start mongodb || docker run -d -p 27017:27017 --name mongodb mongo:latest"
+    },
+    {
+      "label": "Run Backend",
+      "type": "shell",
+      "command": "fuser -k 5014/tcp || true; cd backend/MicroApi && dotnet run",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": { "regexp": "." },
+        "background": { "activeOnStart": true, "beginsPattern": ".", "endsPattern": "." }
+      }
+    },
+    {
+      "label": "Run Frontend",
+      "type": "shell",
+      "command": "fuser -k 4200/tcp || true; cd frontend && npx ng serve --host 0.0.0.0",
+      "isBackground": true,
+      "problemMatcher": "$tsc-watch"
+    },
+    {
+      "label": "Make Ports Public",
+      "type": "shell",
+      "command": "gh codespace ports visibility 4200:public 5014:public -c $CODESPACE_NAME"
+    }
+  ]
+}

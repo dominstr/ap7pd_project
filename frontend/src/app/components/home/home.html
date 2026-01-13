@@ -1,0 +1,37 @@
+<div style="padding: 20px; font-family: sans-serif;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2 style="margin: 0;">Development boards</h2>
+    <button [routerLink]="['/details', 0]" 
+            style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+      + Add new board
+    </button>
+  </div>
+
+  <table style="width: 100%; border-collapse: collapse; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <thead>
+      <tr style="background-color: #f4f4f4; text-align: left; border-bottom: 2px solid #ddd;">
+        <th style="padding: 12px;">ID</th>
+        <th style="padding: 12px;">Board name</th>
+        <th style="padding: 12px;">Manufacturer</th>
+        <th style="padding: 12px; text-align: center;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of boards" style="border-bottom: 1px solid #eee;">
+        <td style="padding: 12px; text-align: center; font-weight: bold;">{{ b.id }}</td>
+        <td style="padding: 12px;">{{ b.name }}</td>
+        <td style="padding: 12px;">{{ b.manufacturer }}</td>
+        <td style="padding: 12px; text-align: center;">
+          <button [routerLink]="['/details', b.id]" 
+                  style="padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Detail / Edit
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="boards.length === 0" style="text-align: center; padding: 40px; color: #666;">
+    <p>Loading from database...</p>
+  </div>
+</div>

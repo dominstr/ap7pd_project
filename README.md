@@ -1,1 +1,3 @@
-# ap7pd_project
+# Microprocessor development boards database
+
+Start in codespaces - ctrl+shift+B

@@ -1,0 +1,21 @@
+{
+  "name": "Microcontroller project",
+  "image": "mcr.microsoft.com/devcontainers/universal:latest",
+  
+  "portsAttributes": {
+    "4200": {
+      "label": "Angular Web",
+      "onAutoForward": "openBrowser",
+      "visibility": "public"
+    },
+    "5014": {
+      "label": "DotNet API",
+      "visibility": "public"
+    },
+    "27017": {
+      "label": "MongoDB",
+      "visibility": "private"
+    }
+  },
+  "forwardPorts": [4200, 5014, 27017]
+}
