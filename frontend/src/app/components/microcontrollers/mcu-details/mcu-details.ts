@@ -13,7 +13,7 @@ import { MicroService } from '../../../services/micro';
 })
 export class McuDetails implements OnInit {
   id: number = 0;
-  mcu: any = { id: 0, name: '', architecture: '' };
+  mcu: any = { id: 0, name: '', architecture: '', manufacturer: '', cores: 1, clockSpeedMhz: 1, ramKb: 1 };
   manufacturers: string[] = [];
   architectures: string[] = [];
 
@@ -30,8 +30,9 @@ export class McuDetails implements OnInit {
 
     this.service.getMicrocontrollers().subscribe({
       next: (data) => {
-        this.manufacturers = [...new Set(data.map(m => m.manufacturer))].filter(x => x);
         this.architectures = [...new Set(data.map(m => m.architecture))].filter(x => x);
+        this.manufacturers = [...new Set(data.map(m => m.manufacturer))].filter(x => x);
+
       }
     });
 

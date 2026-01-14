@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class BoardList implements OnInit {
   boards: any[] = [];
+  mcus: any[] = [];
 
   searchTerm: string = '';
   private searchSubject = new Subject<string>();
@@ -20,10 +21,15 @@ export class BoardList implements OnInit {
   constructor(
     private microService: MicroService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
-ngOnInit(): void {
-    this.loadData();
+  ngOnInit(): void {
+    this.microService.getMicrocontrollers().subscribe(data => {
+      this.mcus = data;
+      this.cdr.detectChanges();
+
+      this.loadData();
+    });
 
     // Debounce searching
     this.searchSubject.pipe(
@@ -63,10 +69,32 @@ ngOnInit(): void {
   }
 
   deleteBoard(id: number): void {
-    if (confirm('Opravdu chcete tuto vývojovou desku smazat?')) {
+    if (confirm('Really delete this board?')) {
       this.microService.deleteBoard(id).subscribe(() => {
         this.loadData();
       });
     }
+  }
+
+  getMcuName(id: any): string {
+
+    if (id === undefined || id === null || id === -1 || id === "-1" || id === 0) {
+      return 'Not assigned';
+    }
+
+    const mcu = this.mcus.find(m => m.id == id);
+
+    if (mcu) {
+      return mcu.name;
+    }
+
+    return this.mcus.length > 0 ? `Unknown (#${id})` : 'Loading...';
+  }
+
+  hasMcu(id: any): boolean {
+    if (id === undefined || id === null || id === -1 || id === "-1" || id === 0) {
+      return false;
+    }
+    return this.mcus.some(m => m.id == id);
   }
 }

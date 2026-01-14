@@ -3,10 +3,10 @@
     <h2 class="fw-bold"><i class="bi bi-motherboard me-2"></i>Development Boards</h2>
 
     <div class="input-group" style="width: 250px;">
-        <span class="input-group-text bg-white border-end-0">
-          <i class="bi bi-search text-muted"></i>
-        </span>
-        <input type="text" (input)="onSearch($event)" placeholder="Search board..." class="form-control">
+      <span class="input-group-text bg-white border-end-0">
+        <i class="bi bi-search text-muted"></i>
+      </span>
+      <input type="text" (input)="onSearch($event)" placeholder="Search board..." class="form-control">
     </div>
 
     <button [routerLink]="['/boards/details', 0]" class="btn btn-success">
@@ -22,7 +22,7 @@
           <th>Board name</th>
           <th>Manufacturer</th>
           <th>Flash [kB]</th>
-          <th>MCU ID</th>
+          <th>Microcontroller</th>
           <th class="text-center pe-3">Action</th>
         </tr>
       </thead>
@@ -32,19 +32,41 @@
           <td>{{ b.name }}</td>
           <td>{{ b.manufacturer }}</td>
           <td>{{ b.flashKb }}</td>
-          <td>{{ b.microcontrollerId }}</td>
+
+          <td>
+            <a *ngIf="hasMcu(b.microcontrollerId); else noMcu" 
+              [routerLink]="['/mcu/details', b.microcontrollerId]"
+              class="text-decoration-none fw-bold">
+              <i class="bi bi-cpu me-1"></i>{{ getMcuName(b.microcontrollerId) }}
+            </a>
+
+            <ng-template #noMcu>
+              <span class="text-muted italic">
+                {{ (b.microcontrollerId === -1 || b.microcontrollerId === 0 || !b.microcontrollerId) 
+                    ? 'Not assigned' 
+                    : 'Unknown MCU (#' + b.microcontrollerId + ')' 
+                }}
+              </span>
+            </ng-template>
+          </td>
+
           <td class="text-center pe-3">
-            <button [routerLink]="['/boards/details', b.id]" class="btn btn-primary btn-sm">
-              Edit
-            </button>
+            <div class="d-flex justify-content-center gap-2">
+              <button [routerLink]="['/boards/details', b.id]" class="btn btn-primary btn-sm">
+                <i class="bi bi-pencil-square me-1"></i> Edit
+              </button>
+
+              <button (click)="deleteBoard(b.id)" class="btn btn-danger btn-sm">
+                <i class="bi bi-trash me-1"></i> Delete
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <div *ngIf="boards.length === 0" class="text-center p-5 text-muted border-top">
-      <div class="spinner-border text-primary mb-2" role="status"></div>
-      <p class="mb-0">Loading data from database...</p>
+    <div *ngIf="boards.length === 0" class="p-5 text-center text-muted">
+      No boards found in database.
     </div>
   </div>
 </div>

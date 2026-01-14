@@ -57,7 +57,7 @@ export class McuList implements OnInit {
   }
 
   deleteMcu(id: number): void {
-    if (confirm('Opravdu chcete tento mikrokontrolér smazat?')) {
+    if (confirm('Really delete this microcontroller?')) {
       this.service.deleteMicrocontroller(id).subscribe(() => {
         this.loadData();
       });

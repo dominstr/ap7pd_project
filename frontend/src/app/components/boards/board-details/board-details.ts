@@ -13,7 +13,9 @@ import { MicroService } from '../../../services/micro';
 export class BoardDetails implements OnInit {
    board: any = null;
    mcu: any = null; // Micro Controller Unit
+   mcus: any[] = [];
    isNew = true;
+   id: number = 0;
 
    constructor(
     private route:  ActivatedRoute,
@@ -22,34 +24,53 @@ export class BoardDetails implements OnInit {
     private cdr: ChangeDetectorRef
    ) {}
 
-   ngOnInit(): void {
-    const idParam = this.route.snapshot.paramMap.get("id");
-    const id = idParam ? Number(idParam) : 0;
+ngOnInit(): void {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.id = idParam ? Number(idParam) : 0;
 
-if (id !== 0) {
+    this.service.getMicrocontrollers().subscribe({
+      next: (data: any[]) => {
+        this.mcus = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error("Error loading MCUs", err)
+    });
+
+    if (this.id === 0) {
+      this.isNew = true;
+      this.board = { 
+        id: 0, 
+        name: '', 
+        manufacturer: '', 
+        flashKb: 1, 
+        microcontrollerId: -1 
+      };
+    } else {
       this.isNew = false;
-      this.service.getBoardById(id).subscribe({
+      this.service.getBoardById(this.id).subscribe({
         next: (data) => {
           this.board = data;
-          if (data.microcontrollerId) {
+          if (data.microcontrollerId && data.microcontrollerId !== -1) {
             this.loadMcuDetails(data.microcontrollerId);
           }
           this.cdr.detectChanges();
         },
         error: (err) => console.error("Error loading board", err)
       });
-    } else {
-      this.isNew = true;
-      // Default values for new board
-      this.board = { id: 0, name: '', manufacturer: '', flashKb: 0, microcontrollerId: 0 };
     }
   }
 
-   loadMcuDetails(mcuId: number): void {
+  loadMcuDetails(mcuId: number): void {
+    if (mcuId === -1) {
+      this.mcu = null;
+      return;
+    }
     this.service.getMicrocontrollerById(mcuId).subscribe(data => this.mcu = data);
-   }
+  }
 
    save(): void {
+    this.board.microcontrollerId = Number(this.board.microcontrollerId);
+    
     if (this.isNew) {
       this.service.addBoard(this.board).subscribe(() => this.router.navigate(["/"]));
     } else {

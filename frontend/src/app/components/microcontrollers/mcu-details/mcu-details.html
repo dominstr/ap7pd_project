@@ -19,19 +19,19 @@
                         <div class="mb-3">
                             <label for="name" class="form-label fw-bold">Name</label>
                             <input type="text" id="name" name="name" class="form-control" [(ngModel)]="mcu.name"
-                                required placeholder="e.g. ESP32-S3 or ATMega328P">
-                        </div>
-
-                        <div class="mb-3">
-                        <label for="manufacturer" class="form-label fw-bold">Manufacturer</label>
-                        <input type="text" id="manufacturer" name="manufacturer" class="form-control" 
-                                [(ngModel)]="mcu.manufacturer" placeholder="e.g. Espressif" required>
+                                required>
                         </div>
 
                         <div class="mb-3">
                         <label for="architecture" class="form-label fw-bold">Architecture</label>
                         <input type="text" id="architecture" name="architecture" class="form-control" 
-                                [(ngModel)]="mcu.architecture" placeholder="e.g. Xtensa" required>
+                                [(ngModel)]="mcu.architecture" required>
+                        </div>
+
+                        <div class="mb-3">
+                        <label for="manufacturer" class="form-label fw-bold">Manufacturer</label>
+                        <input type="text" id="manufacturer" name="manufacturer" class="form-control" 
+                                [(ngModel)]="mcu.manufacturer" required>
                         </div>
 
                         <div class="row">

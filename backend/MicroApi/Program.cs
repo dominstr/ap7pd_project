@@ -17,6 +17,17 @@ SeedData.Initialize(database); // Data seed
 var boardsCol = database.GetCollection<Board>("Boards");
 var mcsCol = database.GetCollection<Microcontroller>("Microcontrollers");
 
+await mcsCol.Indexes.CreateManyAsync(new[] {
+    new CreateIndexModel<Microcontroller>(Builders<Microcontroller>.IndexKeys.Ascending(m => m.Name)),
+    new CreateIndexModel<Microcontroller>(Builders<Microcontroller>.IndexKeys.Ascending(m => m.Manufacturer)),
+    new CreateIndexModel<Microcontroller>(Builders<Microcontroller>.IndexKeys.Ascending(m => m.Architecture))
+});
+
+await boardsCol.Indexes.CreateManyAsync(new[] {
+    new CreateIndexModel<Board>(Builders<Board>.IndexKeys.Ascending(b => b.Name)),
+    new CreateIndexModel<Board>(Builders<Board>.IndexKeys.Ascending(b => b.Manufacturer))
+});
+
 var app = builder.Build();
 app.UseCors();
 
@@ -38,6 +49,12 @@ app.MapGet("/api/boards/search", async (string q) => {
 });
 
 app.MapPost("/api/boards", async (Board b) => {
+    var lastBoard = await boardsCol.Find(_ => true)
+                                   .SortByDescending(x => x.Id)
+                                   .FirstOrDefaultAsync();
+
+    b.Id = (lastBoard?.Id ?? 0) + 1;
+
     await boardsCol.InsertOneAsync(b);
     return Results.Created($"/api/boards/{b.Id}", b);
 });
@@ -72,6 +89,12 @@ app.MapGet("/api/mcu/search", async (string q) => {
 });
 
 app.MapPost("/api/mcu", async (Microcontroller m) => {
+    var lastMcu = await mcsCol.Find(_ => true)
+                               .SortByDescending(x => x.Id)
+                               .FirstOrDefaultAsync();
+
+    m.Id = (lastMcu?.Id ?? 0) + 1;
+
     await mcsCol.InsertOneAsync(m);
     return Results.Created($"/api/mcu/{m.Id}", m);
 });
@@ -82,8 +105,12 @@ app.MapPut("/api/mcu/{id:int}", async (int id, Microcontroller m) => {
 });
 
 app.MapDelete("/api/mcu/{id:int}", async (int id) => {
-    await mcsCol.DeleteOneAsync(x => x.Id == id);
-    return Results.NoContent();
+    // Before deleting the microcontroller, set MicrocontrollerId to null for all boards using it
+    var update = Builders<Board>.Update.Set(b => b.MicrocontrollerId, -1);
+    await boardsCol.UpdateManyAsync(b => b.MicrocontrollerId == id, update);
+    
+    var result = await mcsCol.DeleteOneAsync(x => x.Id == id);
+    return result.DeletedCount > 0 ? Results.NoContent() : Results.NotFound();
 });
 
 app.Run();
