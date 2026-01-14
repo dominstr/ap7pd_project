@@ -1,6 +1,14 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
     <h2 class="fw-bold"><i class="bi bi-motherboard me-2"></i>Development Boards</h2>
+
+    <div class="input-group" style="width: 250px;">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="bi bi-search text-muted"></i>
+        </span>
+        <input type="text" (input)="onSearch($event)" placeholder="Search board..." class="form-control">
+    </div>
+
     <button [routerLink]="['/boards/details', 0]" class="btn btn-success">
       <i class="bi bi-plus-lg"></i> Add New Board
     </button>

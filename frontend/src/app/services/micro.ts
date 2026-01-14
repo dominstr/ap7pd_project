@@ -15,6 +15,11 @@ export class MicroService {
     return this.http.get<any[]>(`${this.apiUrl}/boards`);
   }
 
+  // Filter boards search
+  searchBoards(q: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/boards/search?q=${q}`);
+  }
+
   // Single Board by ID
   getBoardById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/boards/${id}`);
@@ -38,6 +43,11 @@ export class MicroService {
   // Get all MCU
   getMicrocontrollers(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/mcu`);
+  }
+
+  // Filter MCU search
+  searchMcus(q: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/mcu/search?q=${q}`);
   }
 
   // Single MCU detail by ID

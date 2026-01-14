@@ -26,8 +26,16 @@ app.MapGet("/api/boards", async () => await boardsCol.Find(_ => true).ToListAsyn
 app.MapGet("/api/boards/{id:int}", async (int id) => 
     await boardsCol.Find(x => x.Id == id).FirstOrDefaultAsync());
 
-app.MapGet("/api/boards/search", async (string q) => 
-    await boardsCol.Find(x => x.Name.ToLower().Contains(q.ToLower())).ToListAsync());
+app.MapGet("/api/boards/search", async (string q) => {
+    var regex = new MongoDB.Bson.BsonRegularExpression(q, "i"); 
+
+    var filter = Builders<Board>.Filter.Or(
+        Builders<Board>.Filter.Regex(x => x.Name, regex),
+        Builders<Board>.Filter.Regex(x => x.Manufacturer, regex)
+    );
+
+    return await boardsCol.Find(filter).ToListAsync();
+});
 
 app.MapPost("/api/boards", async (Board b) => {
     await boardsCol.InsertOneAsync(b);
@@ -50,6 +58,18 @@ app.MapGet("/api/mcu", async () =>
 
 app.MapGet("/api/mcu/{id:int}", async (int id) => 
     await mcsCol.Find(x => x.Id == id).FirstOrDefaultAsync());
+
+app.MapGet("/api/mcu/search", async (string q) => {
+    var regex = new MongoDB.Bson.BsonRegularExpression(q, "i"); 
+
+    var filter = Builders<Microcontroller>.Filter.Or(
+        Builders<Microcontroller>.Filter.Regex(x => x.Name, regex),
+        Builders<Microcontroller>.Filter.Regex(x => x.Manufacturer, regex),
+        Builders<Microcontroller>.Filter.Regex(x => x.Architecture, regex)
+    );
+
+    return await mcsCol.Find(filter).ToListAsync();
+});
 
 app.MapPost("/api/mcu", async (Microcontroller m) => {
     await mcsCol.InsertOneAsync(m);
